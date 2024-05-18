@@ -57,4 +57,3 @@ db.commit()
 print("delete done") 
 mycursor.close() 
 connection.close()
-

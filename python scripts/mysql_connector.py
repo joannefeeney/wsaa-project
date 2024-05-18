@@ -2,7 +2,7 @@
 
 import mysql.connector 
 
-class StudentDAO: 
+class StudentDAO:
     host ="" 
     user = "" 
     password ="" 
