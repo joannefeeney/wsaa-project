@@ -5,7 +5,7 @@
 
 import mysql.connector 
 # Config file
-from config import mysqlkey as mysqlkey
+import config as config
 
 class FruitDAO:
     host ="" 
@@ -16,11 +16,11 @@ class FruitDAO:
     cursor ="" 
     
     def __init__(self): 
-        #these should be read from a config file 
-        self.host=mysqlkey("host")
-        self.user=mysqlkey("user")
-        self.password=mysqlkey("password")
-        self.database=mysqlkey("database")
+        # Read from my config file 
+        self.host=config.host
+        self.user=config.user
+        self.password=config.password
+        self.database=config.database
         
     def getCursor(self): 
         self.connection = mysql.connector.connect( 
@@ -38,7 +38,7 @@ class FruitDAO:
 
     def create(self, values): 
         cursor = self.getCursor() 
-        sql="insert into fruits (name, country_of_origin, price) values (%s,%s,%s)" 
+        sql="insert into fruit (name, country_of_origin, price) values (%s,%s,%s)" 
         cursor.execute(sql, values) 
         
         self.connection.commit() 
@@ -47,22 +47,22 @@ class FruitDAO:
         return newid 
     
     def getAll(self): 
-        cursor = self.getcursor()
-        sql="select * from fruits"
+        cursor = self.getCursor()
+        sql="select * from fruit"
         cursor.execute(sql)
         results = cursor.fetchall()
         returnArray = []
         #print(results)
         for result in results:
             #print(result)
-            returnArray.append(self.convertToDictionary(result))
+            returnArray.append(result)
         
         self.closeAll()
         return returnArray
         
     def findByID(self, id): 
-        cursor = self.getcursor()
-        sql="select * from fruits where id = %s"
+        cursor = self.getCursor()
+        sql="select * from fruit where id = %s"
         values = (id,)
 
         cursor.execute(sql, values)
@@ -72,17 +72,17 @@ class FruitDAO:
         return returnvalue
     
     def update(self, values): 
-        cursor = self.getcursor()
-        sql="update fruits set name= %s,country_of_origin=%s, price=%s  where id = %s"
+        cursor = self.getCursor()
+        sql="update fruit set name= %s, country_of_origin=%s, price=%s where id = %s"
         
-        values = (fruits.get("name"), fruits.get("country_of_origin"), fruits.get("price"),id)
+        values = (fruit.get("name"), fruit.get("country_of_origin"), fruit.get("price"),id)
         cursor.execute(sql, values)
         self.connection.commit()
         self.closeAll()
     
     def delete(self, id): 
-        cursor = self.getcursor()
-        sql="delete from fruits where id = %s"
+        cursor = self.getCursor()
+        sql="delete from fruit where id = %s"
         values = (id,)
 
         cursor.execute(sql, values)
