@@ -1,5 +1,5 @@
 # wsaa_project.py
-# By Joanne Feeney
+# Author: Joanne Feeney
 # In this python project, I will create an application that provides an online user interface 
 # to perform CRUD operations on a database. This will include:
 # 1. A Flask server that provides the RESTful API
