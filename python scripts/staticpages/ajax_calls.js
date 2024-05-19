@@ -2,7 +2,7 @@
  
     function getAll(callback){
         $.ajax({
-            "url": "http://127.0.0.1:5000/fruits",
+            "url": "http://127.0.0.1:5000/fruit_interface.html",
             "method":"GET",
             "data":"",
             "dataType": "JSON",
@@ -22,7 +22,7 @@
     function createFruit(fruit, callback){
         console.log(JSON.stringify(fruit));
         $.ajax({
-            "url": "http://127.0.0.1:5000/fruits",
+            "url": "http://127.0.0.1:5000/fruit_interface.html",
             "method":"POST",
             "data":JSON.stringify(fruit),
             "dataType": "JSON",
@@ -40,7 +40,7 @@
     function updateFruit(fruit, callback){
         console.log("updateing " +JSON.stringify(fruit));
         $.ajax({
-            "url": "http://127.0.0.1:5000/fruits/"+encodeURI(fruit.id),
+            "url": "http://127.0.0.1:5000/fruit_interface.html"+encodeURI(fruit.id),
             "method":"PUT",
             "data":JSON.stringify(fruit),
             "dataType": "JSON",
@@ -56,7 +56,7 @@
     }
     function deleteFruit(id, callback){
         $.ajax({
-            "url": "http://127.0.0.1:5000/fruits/"+id,
+            "url": "http://127.0.0.1:5000/fruit_interface.html"+id,
             "method":"DELETE",
             "data":"",
             "dataType": "JSON",
