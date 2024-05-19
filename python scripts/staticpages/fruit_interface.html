@@ -1,0 +1,240 @@
+<!-- Code taken from lab06.3b-book-interface.html by Andrew Beatty -->
+
+<html>
+    <head>
+        <Name>WSAA Project by Joanne Feeney</Name>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+
+        <script src="./ajax_calls.js"></script>
+    </head>
+    <body style="background-color:rgb(196, 216, 189);">
+        <h1>Fruits</h1>
+        <div><button id="button-showCreate" onclick="showCreate()">Create Fruit</button><br/><br/></div>
+        <div>
+            <table border="1" id="FruitTable">
+                <tr>
+                        <th>id</th>
+                        <th>Name</th>
+                        <th>Country of origin</th>
+                        <th>Price</th>
+                        <th>Update</th>
+                        <th>Delete</th>
+                </tr>
+                <tr id="1">
+                    <td>1</td>
+                    <td>Watermelon</td>
+                    <td>Test</td>
+                    <td>12</td>
+                    <td><button onclick="showUpdate(this)">update</button></td>
+                    <td><button onclick="doDelete(this)">delete</button></td>
+                   
+            </tr>
+
+        </table>
+        <br/>
+        </div>
+        <div id="createUpdateForm" style="display:none">
+
+            <h2><span id="createLabel">Create a</span> <span id="updateLabel">Update this</span> Fruit</h2>
+            id <input type="text" name="id"><br/>
+            Name <input type="text" name="Name"><br/>
+            Country_of_origin <input type="text" name="Country_of_origin"><br/>
+            Price <input type="number" name="price"><br/>
+           
+            <span><button id="button-doCreate" onclick="doCreate()">Create</button></span>
+ 			<span><button id="button-doUpdate" onclick="doUpdate()">Update</button></span>
+             <!-- "display:none" will make it hidden-->
+
+
+        </div>
+        
+    </body>
+    <script>
+        //console.log("hello world")
+        function showCreate(){
+            document.getElementById("createUpdateForm").style.display = "block"
+            
+            document.getElementById("button-doCreate").style.display = "block"
+            document.getElementById("button-doUpdate").style.display = "none"
+            document.getElementById("createLabel").style.display = "inline"
+            document.getElementById("updateLabel").style.display = "none"
+
+            document.getElementById("button-showCreate").style.display = "none"
+            document.getElementById("FruitTable").style.display = "none"
+            
+        }
+        function showUpdate(buttonElement){
+            document.getElementById("createUpdateForm").style.display = "block"
+           
+            document.getElementById("button-doCreate").style.display = "none"
+            document.getElementById("button-doUpdate").style.display = "block"
+            document.getElementById("createLabel").style.display = "none"
+            document.getElementById("updateLabel").style.display = "inline"
+
+            document.getElementById("button-showCreate").style.display = "none"
+            document.getElementById("FruitTable").style.display = "none"
+
+            rowElement= buttonElement.parentNode.parentNode
+            Fruit = getFruitFromRow(rowElement)
+            //console.log("updating")
+            //console.log(Fruit)
+            populateFormWithFruit(Fruit)
+            
+        }
+        function showViewall(){
+            document.getElementById("createUpdateForm").style.display = "none"
+           
+            document.getElementById("button-showCreate").style.display = "block"
+            document.getElementById("FruitTable").style.display = "block"
+            
+        }
+        function clearForm(){
+            var form = document.getElementById('createUpdateForm')
+
+            form.querySelector('input[name="id"]').disabled = false
+            form.querySelector('input[name="id"]').value  =''
+            form.querySelector('input[name="Country_of_origin"]').value=''
+            form.querySelector('input[name="Name"]').value=''
+            form.querySelector('input[name="price"]').value=''
+        }
+        
+        function getFruitFromForm(){
+            var form = document.getElementById('createUpdateForm')
+
+       	    var Fruit = {}
+        	Fruit.id = form.querySelector('input[name="id"]').value
+        	Fruit.Name = form.querySelector('input[name="Name"]').value
+        	Fruit.Country_of_origin = form.querySelector('input[name="Country_of_origin"]').value
+        	Fruit.price = form.querySelector('input[name="price"]').value
+        	//console.log(JSON.stringify(Fruit))
+            return Fruit
+        }
+        function populateFormWithFruit(Fruit){
+       		var form = document.getElementById('createUpdateForm')
+        	form.querySelector('input[name="id"]').disabled = true
+       		form.querySelector('input[name="id"]').value  = Fruit.id
+       		form.querySelector('input[name="Name"]').value= Fruit.Name
+        	form.querySelector('input[name="Country_of_origin"]').value= Fruit.Country_of_origin
+        	form.querySelector('input[name="price"]').value= Fruit.price
+    }
+
+
+        function addFruitToTable(Fruit){
+            var tableElement = document.getElementById('FruitTable')
+            var rowElement = tableElement.insertRow(-1)
+            
+            rowElement.setAttribute('id',Fruit.id)
+            
+            var cell1 = rowElement.insertCell(0);
+            cell1.innerHTML = Fruit.id
+            var cell2 = rowElement.insertCell(1);
+            cell2.innerHTML = Fruit.Name
+            var cell3 = rowElement.insertCell(2);
+            cell3.innerHTML = Fruit.Country_of_origin
+            var cell4 = rowElement.insertCell(3);
+            cell4.innerHTML = Fruit.price
+            var cell5 = rowElement.insertCell(4);
+            cell5.innerHTML = '<button onclick="showUpdate(this)">Update</button>'
+            var cell6 = rowElement.insertCell(5);
+            cell6.innerHTML = '<button onclick=doDelete(this)>delete</button>'
+
+        }
+        function getFruitFromRow(rowElement){
+            var Fruit ={}
+            Fruit.id  = rowElement.cells[0].firstChild.textContent
+            Fruit.Name = rowElement.cells[1].firstChild.textContent
+            Fruit.Country_of_origin = rowElement.cells[2].firstChild.textContent
+            Fruit.price = rowElement.cells[3].firstChild.textContent
+            return Fruit
+        }
+        function setFruitInRow(rowElement, Fruit){
+            rowElement.cells[0].firstChild.textContent= Fruit.id  
+            rowElement.cells[1].firstChild.textContent= Fruit.Name 
+            rowElement.cells[2].firstChild.textContent= Fruit.Country_of_origin
+            rowElement.cells[3].firstChild.textContent= Fruit.price
+    }
+
+        function doCreate(){
+            console.log("creating a fruit")
+            Fruit = getFruitFromForm()
+            //console.log(Fruit)
+            // I need to wait until I get the id from the server before adding this to the table
+            // so  I put that code in the callback function
+            createFruit(convertDisplayFruitToServerFruit(Fruit), processCreateResponse)
+           
+        }
+        function doUpdate(){
+            Fruit= getFruitFromForm()
+            //console.log(Fruit)
+            var rowElement = document.getElementById(Fruit.id)
+            setFruitInRow(rowElement, Fruit)
+            // now I am updating on the server
+            // yes there is a change that it will be updated on the table and not the server
+            updateFruit(convertDisplayFruitToServerFruit(Fruit), doNothing)
+           
+            showViewall()
+            clearForm()
+        }
+        function doDelete(buttonElement){
+            console.log("in delete")
+            var tableElement = document.getElementById('FruitTable')
+            var rowElement = buttonElement.parentNode.parentNode;
+            // I need the Fruit id
+            id = rowElement.getAttribute("id")
+            console.log("deleting "+id)
+            deleteFruit(id, doNothing)
+           
+
+            index = rowElement.rowIndex
+            tableElement.deleteRow(index);
+
+
+        }
+
+        // populate the table
+        function processGetAllResponse(result){
+            console.log("in process")
+            //console.log(result)
+            for (Fruit of result){
+                displayFruit = {}
+                displayFruit.id = Fruit.id
+                displayFruit.Country_of_origin = Fruit.Country_of_origin
+                displayFruit.Name = Fruit.Name
+                displayFruit.price = Fruit.Price
+                // you can now pass it to addFruitToTable
+                //console.log(displayFruit)
+                addFruitToTable(displayFruit)
+            }
+        }
+        function convertDisplayFruitToServerFruit(displayFruit){
+            serverFruit = {}
+            serverFruit.id = displayFruit.id
+            serverFruit.Name = displayFruit.Name
+            serverFruit.Country_of_origin = displayFruit.Country_of_origin
+            serverFruit.Price = parseInt(displayFruit.price) // convert the string to an int
+            return serverFruit
+        }
+        function convertServerFruitToDisplayFruit(Fruit){
+            displayFruit = {}
+            displayFruit.id = Fruit.id
+            displayFruit.Country_of_origin = Fruit.Country_of_origin
+            displayFruit.Name = Fruit.Name
+            displayFruit.price = Fruit.Price
+            return displayFruit
+        }
+        function processCreateResponse(result){
+            displayFruit = convertServerFruitToDisplayFruit(result)
+            addFruitToTable(displayFruit)
+            showViewall()
+            clearForm()
+        }
+        // I should set this as the default function for the callback
+        function doNothing(result){
+            console.log(result)
+            return "done"
+        }
+         getAll(processGetAllResponse)
+
+        
+    </script>
+</html>
