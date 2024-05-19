@@ -1,5 +1,5 @@
 # flask_server.py
-# Basic Flask server
+# This is mu flask server to interact with fruitDAO.py
 # Author: Joanne Feeney
 # Code copied from WSAA lectures by Andrew Beatty
 
