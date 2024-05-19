@@ -36,15 +36,17 @@ class FruitDAO:
         self.connection.close() 
         self.cursor.close()  
 
-    def create(self, values): 
+    def create(self, fruit): 
         cursor = self.getCursor() 
         sql="insert into fruit (name, country_of_origin, price) values (%s,%s,%s)" 
+        values = (fruit.get("name"), fruit.get("country_of_origin"), fruit.get("price"))
         cursor.execute(sql, values) 
         
         self.connection.commit() 
         newid = cursor.lastrowid 
+        fruit["id"] = newid
         self.closeAll() 
-        return newid 
+        return fruit 
     
     def getAll(self): 
         cursor = self.getCursor()
@@ -53,9 +55,9 @@ class FruitDAO:
         results = cursor.fetchall()
         returnArray = []
         #print(results)
-        for result in results:
+        for row in results:
             #print(result)
-            returnArray.append(result)
+            returnArray.append(self.convertToDict(row))
         
         self.closeAll()
         return returnArray
@@ -67,18 +69,19 @@ class FruitDAO:
 
         cursor.execute(sql, values)
         result = cursor.fetchone()
-        returnvalue = self.convertToDictionary(result)
         self.closeAll()
-        return returnvalue
+        return self.convertToDict(result)
     
-    def update(self, values): 
+    def update(self, id, fruit): 
         cursor = self.getCursor()
         sql="update fruit set name= %s, country_of_origin=%s, price=%s where id = %s"
         
         values = (fruit.get("name"), fruit.get("country_of_origin"), fruit.get("price"),id)
         cursor.execute(sql, values)
         self.connection.commit()
+
         self.closeAll()
+        return fruit
     
     def delete(self, id): 
         cursor = self.getCursor()
@@ -91,5 +94,15 @@ class FruitDAO:
         self.closeAll()
         
         print("delete done")
+        return True
+    
+    def convertToDict(self, resultLine):
+        fruitKeys = ["id", "name", "country_of_origin", "price"]
+        currentkey = 0
+        fruit = {}
+        for attrib in resultLine:
+            fruit[fruitKeys[currentkey]] = attrib
+            currentkey = currentkey + 1 
+        return fruit
 
 fruitDAO = FruitDAO()
