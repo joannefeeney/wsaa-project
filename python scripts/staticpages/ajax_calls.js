@@ -38,7 +38,7 @@
 
     }
     function updateFruit(fruit, callback){
-        console.log("updateing " +JSON.stringify(fruit));
+        console.log("updating" +JSON.stringify(fruit));
         $.ajax({
             "url": "http://127.0.0.1:5000/fruit_interface.html"+encodeURI(fruit.id),
             "method":"PUT",
